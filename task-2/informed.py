@@ -45,8 +45,7 @@ def greedy_best_first_graph_search(problem, h):
 def a_star_graph_search(problem, h):
     initial_state = problem.initial_state()
     initial_node = create_node(initial_state, None, "", 0, 0)
-    # use f(n) = g(n) + h(n) as the key of the minheap
-    frontier = [(0 + h(initial_state), initial_node)]
+    frontier = [(h(initial_state), initial_node)]  # Use h(n) as the key
     explored = set()
     n_visits = 0
     while True:
@@ -62,20 +61,17 @@ def a_star_graph_search(problem, h):
             else:
                 for succ, cost in problem.successors(state):
                     child_cost = path_cost + cost
-                    child = create_node(succ, node, "", \
-                        child_cost, depth + 1)
-                    h_value = h(succ)
+                    child = create_node(succ, node, "", child_cost, depth + 1)
+                    new_h = h(succ)
                     if succ not in explored:
                         idx = index(frontier, succ)
-                        f_value = child_cost + h_value
                         if idx < 0:
-                            heappush(frontier, (f_value, child))
+                            heappush(frontier, (new_h, child))
                         else:
-                            existing_f, existing = frontier[idx]
-                            if existing_f > f_value:
-                                frontier[idx] = (f_value, child)
+                            existing_h, existing = frontier[idx]
+                            if existing_h > new_h:
+                                frontier[idx] = (new_h, child)
                                 heapify(frontier)
-
 
 def a_star_tree_search(problem, h):
     initial_state = problem.initial_state()
