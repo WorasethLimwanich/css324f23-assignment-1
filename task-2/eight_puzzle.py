@@ -1,13 +1,10 @@
 import copy
 
-
 def initial_state():
     return ((7, 2, 4, 5, 0, 6, 8, 3, 1), 1, 1)
 
-
 def is_goal(s):
     return s[0] == (1, 2, 3, 4, 5, 6, 7, 8, 0)
-
 
 def successors(s):
     _, r, c = s
@@ -24,10 +21,8 @@ def successors(s):
     if is_valid(new_r, new_c):
         yield move_blank(s, new_r, new_c), 1
 
-
 def is_valid(r, c):
     return 0 <= r <= 2 and 0 <= c <= 2
-
 
 def move_blank(s, new_r, new_c):
     board, r, c = s
@@ -40,15 +35,19 @@ def h1(s):
     goal = (1, 2, 3, 4, 5, 6, 7, 8, 0)
     board, _, _ = s
     res = 0
-    # The for loop counts the number of elements that is different from
-    # the goal configuration.
-    # We start from index 1 to 8 because the blank is excluded.
     for idx in range(1, 9):
         if goal[idx] != board[idx]:
             res += 1
     return res
 
 def h3(s):
-    # implement this function
     board, _, _ = s
-    return 0
+    h_value = 0
+    for r in range(3):
+        for c in range(3):
+            tile = board[r * 3 + c]
+            if tile != 0:  # Skip the blank tile
+                target_row = (tile - 1) // 3
+                target_col = (tile - 1) % 3
+                h_value += abs(r - target_row) + abs(c - target_col)
+    return h_value
